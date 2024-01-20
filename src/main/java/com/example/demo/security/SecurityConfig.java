@@ -17,10 +17,8 @@ public class SecurityConfig {
     public UserDetailsManager userDetailsManager(DataSource dataSource){
         JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
 
-        // define query to retrieve a user by username
         jdbcUserDetailsManager.setUsersByUsernameQuery("SELECT user_name, pw, active FROM users WHERE user_name=?");
 
-        // define query to retrieve the authorities/roles by username
         jdbcUserDetailsManager.setAuthoritiesByUsernameQuery("SELECT user_name, role FROM roles WHERE user_name=?");
         return jdbcUserDetailsManager;
     }
@@ -37,11 +35,8 @@ public class SecurityConfig {
                                 "/victim/stats", "/victim/stats/**").hasRole("ADMIN")
         );
 
-        // use HTTP basic authentication
         http.httpBasic(Customizer.withDefaults());
 
-        // disable Cross Site Request Forgery (CSRF)
-        // in general, not required for stateless REST APIs that use POST, PUT DELETE and/or PATCH
         http.csrf(csrf -> csrf.disable());
 
         return http.build();
